@@ -96,6 +96,136 @@ h6 {
     background-clip: text;
 }
 
+/* ==================== HEADER ==================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    /* Boshida shaffof */
+    transition: all var(--transition-base);
+    padding: 1.5rem 0;
+    /* Kattaroq padding */
+}
+
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    /* Scroll bo'lganda kichrayadi */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Scroll bo'lmaganda header textlari oq bo'lishi kerak (chunki orqa fon yashil) */
+.header:not(.scrolled) .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.header:not(.scrolled) .logo-text {
+    background: none;
+    -webkit-text-fill-color: white;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header:not(.scrolled) .logo {
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.logo {
+    height: 55px;
+    width: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+    /* Dumaloq qilish */
+    border: 3px solid white;
+    /* Oq ramka */
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    /* Chiroyli ten */
+    transition: transform var(--transition-base);
+}
+
+.logo:hover {
+    transform: scale(1.1) rotate(5deg);
+    /* Hover'da ozgina effek */
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    /* Gradient o'rniga toza qora rang, o'qish oson bo'lishi uchun */
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: width var(--transition-base);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.btn-nav {
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-gradient);
+    color: white !important;
+    border-radius: var(--radius-full);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-nav::after {
+    display: none;
+}
+
+.btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
 /* ==================== BUTTONS ==================== */
 .btn {
     display: inline-flex;
@@ -268,7 +398,10 @@ h6 {
     text-align: center;
     color: white;
     max-width: 900px;
-    padding: var(--spacing-2xl) 0;
+    padding: 180px 0 var(--spacing-2xl);
+    /* Tepa qismga 180px joy tashladik */
+    margin-top: 20px;
+    /* Qo'shimcha xavfsizlik margini */
 }
 
 .hero-title {
@@ -576,7 +709,8 @@ h6 {
 .instructor-highlights {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
 }
 
 .highlight-item {
@@ -744,6 +878,10 @@ h6 {
 }
 
 /* ==================== RESPONSIVE DESIGN ==================== */
+.mobile-cta {
+    display: none;
+}
+
 @media (max-width: 968px) {
 
     .instructor-content,
@@ -761,30 +899,213 @@ h6 {
         gap: var(--spacing-lg);
         text-align: center;
     }
+
+    .nav-menu {
+        gap: 1rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
 }
 
 @media (max-width: 640px) {
+
+    /* Responsive Header & Typography */
+    .header-content {
+        padding: 0.5rem 0;
+        justify-content: center;
+    }
+
+    .logo-container {
+        gap: 0.75rem;
+    }
+
+    .logo {
+        height: 50px;
+        width: 50px;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    /* Hero Section Mobile */
+    .hero-title {
+        font-size: 2.25rem;
+        line-height: 1.2;
+    }
+
+    .hero-description {
+        font-size: 1.15rem;
+        padding: 0 1rem;
+    }
+
     .hero-stats {
-        flex-direction: column;
-        gap: var(--spacing-lg);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+    }
+
+    .stat-item {
+        min-width: 100px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
     }
 
     .hero-cta {
         flex-direction: column;
+        padding: 0 1.5rem;
+        width: 100%;
+        gap: 1rem;
     }
 
     .btn {
         width: 100%;
         justify-content: center;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    /* Sections Mobile */
+    .section-title {
+        font-size: 1.75rem;
+        padding: 0 1rem;
+    }
+
+    .section-description {
+        font-size: 1.1rem;
+        padding: 0 1rem;
     }
 
     .courses-grid {
         grid-template-columns: 1fr;
+        padding: 0 1rem;
     }
 
+    .course-card {
+        padding: 1.5rem;
+    }
+
+    /* Header Mobile Optimization */
+    .header.scrolled {
+        background: #ffffff !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 0.75rem 0;
+    }
+
+    /* Registration Form Mobile Optimization */
+    .registration-form-wrapper {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+    }
+
+    .form-input {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        border-radius: var(--radius-md);
+        background: #f9fafb;
+    }
+
+    .form-input:focus {
+        background: #ffffff;
+        transform: translateY(-2px);
+    }
+
+    .form-label {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-block {
+        padding: 1.2rem;
+        font-size: 1.2rem;
+    }
+
+    /* Footer Mobile */
     .footer-links {
         flex-direction: column;
-        gap: var(--spacing-sm);
+        gap: 1.5rem;
+        font-size: 1.1rem;
         align-items: center;
+        padding: 1rem 0;
+    }
+
+    .course-card[style*="grid-column: span 2"] {
+        grid-column: span 1 !important;
+    }
+
+    /* Mobile Floating CTA */
+    .mobile-cta {
+        display: flex;
+        /* JavaScript orqali block qilinadi scroll bo'lganda */
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        /* Boshida pastda yashirin */
+        width: 90%;
+        max-width: 400px;
+        background: var(--primary-gradient);
+        color: white;
+        text-decoration: none;
+        padding: 1rem;
+        border-radius: var(--radius-full);
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        z-index: 9999;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .mobile-cta.visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .mobile-cta:active {
+        transform: translateX(-50%) scale(0.95);
+    }
+
+    .cta-shine {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%);
+        transform: skewX(-25deg);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+        }
+
+        20% {
+            left: 200%;
+        }
+
+        100% {
+            left: 200%;
+        }
     }
 }

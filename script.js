@@ -2,9 +2,51 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('registrationForm');
     const instructorImage = document.getElementById('instructorImage');
+    const logo = document.getElementById('logo');
 
     // Set instructor image
     instructorImage.src = 'instructor.jpg';
+
+    // Handle logo - Create placeholder if logo.png doesn't exist
+    logo.onerror = function () {
+        // Create a simple SVG placeholder
+        this.style.display = 'none';
+        const logoContainer = this.parentElement;
+        const placeholder = document.createElement('div');
+        placeholder.style.cssText = `
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+        `;
+        placeholder.textContent = 'EA';
+        logoContainer.insertBefore(placeholder, this);
+    };
+
+    // Add scroll effect to header
+    const header = document.querySelector('.header');
+
+    // Initial check
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    }
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
 
     // Handle form submission
     form.addEventListener('submit', function (e) {
@@ -19,6 +61,30 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // TELEGRAM BOT SOZLAMALARI
+        // 1. @BotFather dan olgan TOKENni shu yerga qo'ying:
+        const BOT_TOKEN = 'SIZNING_BOT_TOKENINGIZ';
+        // 2. @userinfobot dan olgan CHAT_ID ni shu yerga qo'ying:
+        const CHAT_ID = 'SIZNING_CHAT_ID';
+
+        const message = `Yangi buyurtma! 🚀\n\n👤 Ism: ${name}\n📞 Telefon: ${phone}`;
+
+        // Send to Telegram
+        if (BOT_TOKEN !== 'SIZNING_BOT_TOKENINGIZ') {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message
+                })
+            });
+        }
+
+        // Netlify Form Submission
+
         // Phone validation (basic)
         const phoneRegex = /^[\d\s\+\-\(\)]+$/;
         if (!phoneRegex.test(phone)) {
@@ -26,23 +92,23 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Success message
-        alert(`Rahmat, ${name}! Ro'yxatdan o'tganingiz qabul qilindi. Tez orada siz bilan bog'lanamiz.`);
+        // Netlify Form Submission
+        const formData = new FormData(form);
 
-        // Log to console (in production, this would send to a server)
-        console.log('Registration submitted:', { name, phone });
-
-        // Reset form
-        form.reset();
-
-        // Optional: Send data to server
-        // fetch('/api/register', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ name, phone })
-        // });
+        fetch('/', {
+            method: 'POST',
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString()
+        })
+            .then(() => {
+                // Success message
+                alert(`Rahmat, ${name}! Ro'yxatdan o'tganingiz qabul qilindi. Tez orada siz bilan bog'lanamiz.`);
+                form.reset();
+            })
+            .catch((error) => {
+                alert('Xatolik yuz berdi. Iltimos, keyinroq urinib ko\'ring.');
+                console.error(error);
+            });
     });
 
     // Smooth scroll for navigation links
@@ -114,4 +180,24 @@ document.addEventListener('DOMContentLoaded', function () {
             e.target.value = formatted;
         }
     });
+
+
+
+    // Mobile Floating CTA Logic
+    const mobileCta = document.getElementById('mobileCta');
+    const registrationSection = document.getElementById('register');
+
+    if (mobileCta && registrationSection) {
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const registrationTop = registrationSection.offsetTop - window.innerHeight + 100;
+
+            // Show only after Hero and Hide when reaching Registration Form
+            if (scrollPosition > 300 && scrollPosition < registrationTop) {
+                mobileCta.classList.add('visible');
+            } else {
+                mobileCta.classList.remove('visible');
+            }
+        });
+    }
 });
