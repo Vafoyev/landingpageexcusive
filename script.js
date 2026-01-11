@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
 
         // Basic validation
         if (!name || !phone) {
@@ -68,39 +70,57 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Netlify Form Submission
-        const formData = new FormData(form);
-        // Explicitly force the form-name to be 'contact' just in case
-        formData.set('form-name', 'contact');
+        // Disable button to prevent double submission
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span>Yuborilmoqda...</span>';
 
-        fetch('/', {
+        // TELEGRAM BOT SOZLAMALARI
+        const BOT_TOKEN = '8251338976:AAFlcAK6IisADWys45w8F3Oc9uFLXIbSH4w';
+        const CHAT_ID = '8016625412';
+
+        const message = `<b>Yangi Buyurtma! 🚀</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+
+        // Send to Telegram
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
-        })
-            .then(() => {
-                // Success message
-                alert(`Rahmat, ${name}! Sizning so'rovingiz qabul qilindi. Tez orada aloqaga chiqamiz.`);
-                form.reset();
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
             })
-            .catch((error) => {
-                console.error('Submission error:', error);
-                alert('Xatolik yuz berdi. Iltimos, internet aloqasini tekshiring va qayta urinib ko\'ring.');
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Agar Telegramga ketgan bo'lsa, foydalanuvchiga xabar beramiz
+                    alert(`Rahmat, ${name}! Sizning so'rovingiz qabul qilindi. Tez orada aloqaga chiqamiz.`);
+                    form.reset();
+
+                    // Netlify ga ham backup sifatida yuborib qo'yamiz (foydalanuvchiga bildirmasdan)
+                    const formData = new FormData(form);
+                    formData.set('form-name', 'contact');
+                    formData.set('name', name);
+                    formData.set('phone', phone);
+                    fetch('/', {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(formData).toString()
+                    }).catch(err => console.log('Netlify backup error:', err));
+
+                } else {
+                    throw new Error('Telegram API error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring yoki keyinroq harakat qiling.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
             });
-
-        // TELEGRAM BOT (Optional)
-        // Agar bot sozlamalari kiritilgan bo'lsa, Telegramga ham yuborish
-        const BOT_TOKEN = 'SIZNING_BOT_TOKENINGIZ';
-        const CHAT_ID = 'SIZNING_CHAT_ID';
-
-        if (BOT_TOKEN !== 'SIZNING_BOT_TOKENINGIZ' && CHAT_ID !== 'SIZNING_CHAT_ID') {
-            const message = `Yangi buyurtma! 🚀\n\n👤 Ism: ${name}\n📞 Telefon: ${phone}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: message })
-            }).catch(err => console.log('Telegram send error:', err));
-        }
     });
 
     // Smooth scroll for navigation links
