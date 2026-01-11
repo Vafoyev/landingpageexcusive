@@ -61,30 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // TELEGRAM BOT SOZLAMALARI
-        // 1. @BotFather dan olgan TOKENni shu yerga qo'ying:
-        const BOT_TOKEN = 'SIZNING_BOT_TOKENINGIZ';
-        // 2. @userinfobot dan olgan CHAT_ID ni shu yerga qo'ying:
-        const CHAT_ID = 'SIZNING_CHAT_ID';
-
-        const message = `Yangi buyurtma! 🚀\n\n👤 Ism: ${name}\n📞 Telefon: ${phone}`;
-
-        // Send to Telegram
-        if (BOT_TOKEN !== 'SIZNING_BOT_TOKENINGIZ') {
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message
-                })
-            });
-        }
-
-        // Netlify Form Submission
-
         // Phone validation (basic)
         const phoneRegex = /^[\d\s\+\-\(\)]+$/;
         if (!phoneRegex.test(phone)) {
@@ -94,6 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Netlify Form Submission
         const formData = new FormData(form);
+        // Explicitly force the form-name to be 'contact' just in case
+        formData.set('form-name', 'contact');
 
         fetch('/', {
             method: 'POST',
@@ -102,13 +80,27 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(() => {
                 // Success message
-                alert(`Rahmat, ${name}! Ro'yxatdan o'tganingiz qabul qilindi. Tez orada siz bilan bog'lanamiz.`);
+                alert(`Rahmat, ${name}! Sizning so'rovingiz qabul qilindi. Tez orada aloqaga chiqamiz.`);
                 form.reset();
             })
             .catch((error) => {
-                alert('Xatolik yuz berdi. Iltimos, keyinroq urinib ko\'ring.');
-                console.error(error);
+                console.error('Submission error:', error);
+                alert('Xatolik yuz berdi. Iltimos, internet aloqasini tekshiring va qayta urinib ko\'ring.');
             });
+
+        // TELEGRAM BOT (Optional)
+        // Agar bot sozlamalari kiritilgan bo'lsa, Telegramga ham yuborish
+        const BOT_TOKEN = 'SIZNING_BOT_TOKENINGIZ';
+        const CHAT_ID = 'SIZNING_CHAT_ID';
+
+        if (BOT_TOKEN !== 'SIZNING_BOT_TOKENINGIZ' && CHAT_ID !== 'SIZNING_CHAT_ID') {
+            const message = `Yangi buyurtma! 🚀\n\n👤 Ism: ${name}\n📞 Telefon: ${phone}`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+            }).catch(err => console.log('Telegram send error:', err));
+        }
     });
 
     // Smooth scroll for navigation links
