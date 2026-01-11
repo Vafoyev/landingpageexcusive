@@ -94,11 +94,29 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.ok) {
-                    // Agar Telegramga ketgan bo'lsa, foydalanuvchiga xabar beramiz
-                    alert(`Rahmat, ${name}! Sizning so'rovingiz qabul qilindi. Tez orada aloqaga chiqamiz.`);
+                    // SUCCESS LOGIC: Show Visual Feedback
+                    const successHTML = `
+                    <div class="success-message" style="display: flex;">
+                        <div class="success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 6L9 17L4 12"></path>
+                            </svg>
+                        </div>
+                        <h3 class="success-title">Muvaffaqiyatli!</h3>
+                        <p class="success-text">Rahmat, ${name}! So'rovingiz qabul qilindi. Tez orada aloqaga chiqamiz.</p>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 1rem;">OK</button>
+                    </div>
+                `;
+
+                    // Hide Form and Show Success Message
+                    form.style.display = 'none';
+                    const successDiv = document.createElement('div');
+                    successDiv.innerHTML = successHTML;
+                    form.parentNode.insertBefore(successDiv, form);
+
                     form.reset();
 
-                    // Netlify ga ham backup sifatida yuborib qo'yamiz (foydalanuvchiga bildirmasdan)
+                    // Backup submission to Netlify (invisible to user)
                     const formData = new FormData(form);
                     formData.set('form-name', 'contact');
                     formData.set('name', name);
@@ -115,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring yoki keyinroq harakat qiling.');
+                alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
             })
             .finally(() => {
                 submitButton.disabled = false;
