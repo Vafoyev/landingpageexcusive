@@ -54,11 +54,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
+        const interest = document.getElementById('interest').value;
         const submitButton = form.querySelector('button[type="submit"]');
         const originalButtonText = submitButton.innerHTML;
 
         // Basic validation
-        if (!name || !phone) {
+        if (!name || !phone || !interest) {
             alert('Iltimos, barcha maydonlarni to\'ldiring');
             return;
         }
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const BOT_TOKEN = '8251338976:AAFlcAK6IisADWys45w8F3Oc9uFLXIbSH4w';
         const CHAT_ID = '7999106822';
 
-        const message = `<b>Yangi Buyurtma! 🚀</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+        const message = `<b>Yangi Buyurtma! 🚀</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n📚 <b>Yo'nalish:</b> ${interest}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
 
         // Send to Telegram
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     formData.set('form-name', 'contact');
                     formData.set('name', name);
                     formData.set('phone', phone);
+                    formData.set('interest', interest);
                     fetch('/', {
                         method: 'POST',
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
