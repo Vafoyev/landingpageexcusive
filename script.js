@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // TELEGRAM BOT SOZLAMALARI
         const BOT_TOKEN = '8251338976:AAFlcAK6IisADWys45w8F3Oc9uFLXIbSH4w';
-        const CHAT_ID = '8016625412';
+        const CHAT_ID = '7999106822';
 
         const message = `<b>Yangi Buyurtma! 🚀</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
 
