@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const BOT_TOKEN = '8251338976:AAFlcAK6IisADWys45w8F3Oc9uFLXIbSH4w';
         const CHAT_ID = '7999106822';
 
-        const message = `<b>Yangi Buyurtma! 🚀</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n📚 <b>Yo'nalish:</b> ${interest}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+        const message = `<b>🎓 Kompyuter Savodxonligi Kursi 🎓</b>\n\n👤 <b>Ism:</b> ${name}\n📞 <b>Telefon:</b> ${phone}\n✍️ <b>Qiziqish:</b> ${interest}\n\n📅 Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
 
         // Send to Telegram
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
